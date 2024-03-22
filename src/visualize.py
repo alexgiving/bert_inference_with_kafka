@@ -25,7 +25,7 @@ def main():
     container_processed_samples.title('Counter')
     container_processed_samples = container_processed_samples.empty()
 
-    container_accuracies = st.container(border=True, height=400)
+    container_accuracies = st.container(border=True)
     container_accuracies.title('Accuracies')
     container_accuracies = container_accuracies.empty()
 
@@ -33,9 +33,9 @@ def main():
 
     while True:
         msg = consumer.poll(timeout=1000)
+
         if msg is not None:
             container_processed_samples = container_processed_samples.empty()
-            counter += 1
             data = json.loads(msg.value().decode('utf-8'))
 
             predicted = data['predicted']
@@ -43,8 +43,10 @@ def main():
 
             total_result[reference].append(predicted)
 
-            for class_name, results in total_result.items():
-                container_processed_samples.write(f'Class {class_name} : {len(results)} samples')
+            text_info = '\n'.join(
+                [f'Class {class_name} : {len(results)} samples' for class_name, results in total_result.items()]
+            )
+            container_processed_samples.write(text_info)
 
             column_classes = list(total_result.keys())
             accuracies = [
@@ -53,10 +55,11 @@ def main():
             print(f'Accuracies: {accuracies}', flush=True)
 
             fig, ax = plt.subplots()
+            fig.set_size_inches(2, 2)
             bar_container = ax.bar(column_classes, accuracies)
             ax.set(ylabel='Correct answers, %', title='Per class Accuracy', ylim=(0, 100))
             ax.bar_label(bar_container, fmt='{:,.0f}')
-            container_accuracies.pyplot(fig)
+            container_accuracies.pyplot(fig, use_container_width=False)
             plt.close()
 
 
