@@ -55,7 +55,7 @@ def main():
             print(f'Accuracies: {accuracies}', flush=True)
 
             fig, ax = plt.subplots()
-            fig.set_size_inches(2, 2)
+            fig.set_size_inches(4, 4)
             bar_container = ax.bar(column_classes, accuracies)
             ax.set(ylabel='Correct answers, %', title='Per class Accuracy', ylim=(0, 100))
             ax.bar_label(bar_container, fmt='{:,.0f}')
