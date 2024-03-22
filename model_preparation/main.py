@@ -38,7 +38,7 @@ def main() -> None:
 
     dataset = load_dataset(dataset_name)
     num_classes = 4
-    model, tokenizer = prepare_model_tokenizer(model_name, num_classes)
+    model, tokenizer = prepare_model_tokenizer(model_name, num_classes, None)
 
     preprocess_function = lambda x: tokenizer(x['text'], truncation=True)
 
